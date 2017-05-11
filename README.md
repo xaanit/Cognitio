@@ -41,13 +41,9 @@ Maven (Add the following to your pom.xml, no elipses):
 ```
 
 ```xml
-...
-        <dependency>
-        ...
-            <groupId>me.xaanit.cognitio</groupId>
-            <artifactId>Cognitio</artifactId>
-            <version>1.0.0</version>
-        ...
-        </dependency>
-...
+	<dependency>
+	    <groupId>com.github.xaanit</groupId>
+	    <artifactId>cognitio</artifactId>
+	    <version>03e571ed84</version>
+	</dependency>
 ```
