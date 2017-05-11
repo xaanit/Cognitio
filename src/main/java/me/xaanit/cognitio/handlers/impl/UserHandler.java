@@ -36,7 +36,6 @@ public class UserHandler implements IUserHandler {
             return gson.fromJson(Requests.makeGetRequest(client, Endpoints.userProfileEndpoint(id), new Header("Authorization", key)), TUser.class);
         } catch (IOException ex) {
             logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Could not grab user by ID! Message: " + ex.getMessage(), LogLevel.HIGH);
-            ex.printStackTrace();
             return null;
         }
     }

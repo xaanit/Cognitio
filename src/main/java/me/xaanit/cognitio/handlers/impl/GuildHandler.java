@@ -14,6 +14,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -74,10 +75,9 @@ public class GuildHandler implements IGuildHandler {
             throw new TatsumakiException("Points must be above 0!");
         if (points > 50000)
             throw new TatsumakiException("Points must be below 50,000!!");
+
         String jsonString = "{\"amount\":" + points + ",\"action\":\"" + action + "\"}";
-        logger.debug("POINTS: " + jsonString);
-        logger.debug("POINTS: " + Endpoints.guildMembersPointsEndpoint(guildID, userID));
-      //  Requests.UNIREST(jsonString, Endpoints.guildMembersPointsEndpoint(guildID, userID), new Header("Authorization", key));
+
         return Requests.makePutRequest(client, JSON, jsonString, Endpoints.guildMembersPointsEndpoint(guildID, userID), new Header("Authorization", key));
     }
 
@@ -86,7 +86,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicScore(guildID, userID, points, "add");
         } catch (IOException ex) {
-            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to add score to user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
+            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to add score to user " + userID + " on guild " + guildID + " with message: " + ex.getMessage(), LogLevel.UNKNOWN);
             throw new TatsumakiException("Could not add score to user " + userID + " on guild " + guildID);
         }
     }
@@ -96,7 +96,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicScore(guildID, userID, points, "set");
         } catch (IOException ex) {
-            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to set the score of user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
+            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to set the score of user " + userID + " on guild " + guildID + " with message: " + ex.getMessage(), LogLevel.UNKNOWN);
             throw new TatsumakiException("Could not add score to user " + userID + " on guild " + guildID);
         }
     }
@@ -119,7 +119,6 @@ public class GuildHandler implements IGuildHandler {
         if (points > 50000)
             throw new TatsumakiException("Points must be below 50,000!!");
         String jsonString = "{\"amount\":" + points + ",\"action\":\"" + action + "\"}";
-        logger.debug("SCORE: " + jsonString);
         return Requests.makePutRequest(client, JSON, jsonString, Endpoints.guildMembersScoreEndpoint(guildID, userID), new Header("Authorization", key));
     }
 
@@ -133,11 +132,10 @@ public class GuildHandler implements IGuildHandler {
         if (client == null)
             client = new OkHttpClient();
         ILeaderboard leaderboard = null;
-        final List<IRankedUser> users = null;
+         List<IRankedUser> users = new ArrayList<>();
         try {
             List<RankedUser> uRanked = Arrays.asList(gson.fromJson(Requests.makeGetRequest(client, Endpoints.guildLeaderboardEndpoint(guildID) + "?limit=" + limit, new Header("Authorization", key)).replaceAll("(,null)", ""), RankedUser[].class));
             uRanked.forEach(u -> users.add(u));
-
         } catch (Exception ex) {
             logger.error("Could not load leaderboard! Error: " + ex.getMessage(), LogLevel.HIGH);
             return null;

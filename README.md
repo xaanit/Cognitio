@@ -26,6 +26,8 @@ Contact xaanit#1703 on Discord with any problems.
 
 ### Using Cognitio
 
+[![](https://jitpack.io/v/xaanit/cognitio.svg)](https://jitpack.io/#xaanit/cognitio)
+
 Maven (Add the following to your pom.xml, no elipses):
 ```xml
 ...
