@@ -1,7 +1,6 @@
 package me.xaanit.cognitio.internal;
 
 import me.xaanit.cognitio.handlers.impl.Header;
-import me.xaanit.cognitio.util.SimpleLogger;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -15,15 +14,12 @@ public class Requests {
 
         RequestBody body = RequestBody.create(type, bodyString);
         Request.Builder requestBuilder = new Request.Builder().url(url);
-        System.out.println("URL: " + url);
-        System.out.println("BODYSTRING: " + bodyString);
         requestBuilder.addHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:44.0) Gecko/20100101 Firefox/44.0");
         for (Header h : headers)
             requestBuilder.addHeader(h.getKey(), h.getValue());
         requestBuilder.put(body);
         Request request = requestBuilder.build();
         Response response = client.newCall(request).execute();
-        new SimpleLogger().debug(response.body().string());
         boolean success = response.isSuccessful();
         response.close();
         return success;

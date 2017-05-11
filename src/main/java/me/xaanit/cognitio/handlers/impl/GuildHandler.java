@@ -77,7 +77,8 @@ public class GuildHandler implements IGuildHandler {
         String jsonString = "{\"amount\":" + points + ",\"action\":\"" + action + "\"}";
         logger.debug("POINTS: " + jsonString);
         logger.debug("POINTS: " + Endpoints.guildMembersPointsEndpoint(guildID, userID));
-        return Requests.makePutRequest(client, JSON, jsonString, Endpoints.guildMembersPointsEndpoint(":" + guildID, ":" + userID), new Header("Authorization", key));
+      //  Requests.UNIREST(jsonString, Endpoints.guildMembersPointsEndpoint(guildID, userID), new Header("Authorization", key));
+        return Requests.makePutRequest(client, JSON, jsonString, Endpoints.guildMembersPointsEndpoint(guildID, userID), new Header("Authorization", key));
     }
 
     @Override

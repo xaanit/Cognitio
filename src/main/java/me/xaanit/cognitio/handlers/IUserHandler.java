@@ -8,7 +8,8 @@ public interface IUserHandler {
     /**
      * Gets a user by their ID.
      *
-     * @return The TUser instance
+     * @param id The ID of the user
+     * @return The ITUser instance
      */
-    ITUser getUserByID();
+    ITUser getUserByID(String id);
 }
