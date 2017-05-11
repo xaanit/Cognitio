@@ -1,8 +1,10 @@
 package me.xaanit.cognitio.handlers.impl;
 
 
+import com.google.gson.Gson;
 import me.xaanit.cognitio.handlers.IGuildHandler;
 import me.xaanit.cognitio.handlers.ILeaderboard;
+import me.xaanit.cognitio.handlers.IRankedUser;
 import me.xaanit.cognitio.internal.Endpoints;
 import me.xaanit.cognitio.internal.Requests;
 import me.xaanit.cognitio.internal.exceptions.TatsumakiException;
@@ -12,6 +14,8 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class GuildHandler implements IGuildHandler {
 
@@ -20,6 +24,7 @@ public class GuildHandler implements IGuildHandler {
     private static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
     private SimpleLogger logger;
+    private Gson gson;
 
     public GuildHandler(String key) {
         this.client = null;
@@ -28,6 +33,7 @@ public class GuildHandler implements IGuildHandler {
         else
             this.key = key;
         this.logger = new SimpleLogger();
+        gson = new Gson();
     }
 
     @Override
@@ -35,7 +41,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicPoints(guildID, userID, points, "add");
         } catch (IOException ex) {
-            logger.error("Failed to add points to user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
+            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to add points to user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
             throw new TatsumakiException("Could not add points to user " + userID + " on guild " + guildID);
         }
     }
@@ -45,7 +51,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicPoints(guildID, userID, points, "set");
         } catch (IOException ex) {
-            logger.error("Failed to set the points of user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
+            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to set the points of user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
             throw new TatsumakiException("Could not set the points of user " + userID + " on guild " + guildID);
         }
     }
@@ -55,7 +61,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicPoints(guildID, userID, points, "remove");
         } catch (IOException ex) {
-            logger.error("Failed to remove points from user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
+            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to remove points from user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
             throw new TatsumakiException("Could not add points to user " + userID + " on guild " + guildID);
         }
     }
@@ -63,11 +69,15 @@ public class GuildHandler implements IGuildHandler {
     private boolean basicPoints(String guildID, String userID, int points, String action) throws IOException {
         if (client == null)
             client = new OkHttpClient();
+
         if (points < 0)
             throw new TatsumakiException("Points must be above 0!");
         if (points > 50000)
             throw new TatsumakiException("Points must be below 50,000!!");
-        return Requests.makePostRequest(client, JSON, "{\"amount\"" + points + ",\"action\":\"" + action + "\"}", Endpoints.guildMembersPointsEndpoint(guildID, userID), new Header("Authorization", key));
+        String jsonString = "{\"amount\":" + points + ",\"action\":\"" + action + "\"}";
+        logger.debug("POINTS: " + jsonString);
+        logger.debug("POINTS: " + Endpoints.guildMembersPointsEndpoint(guildID, userID));
+        return Requests.makePutRequest(client, JSON, jsonString, Endpoints.guildMembersPointsEndpoint(":" + guildID, ":" + userID), new Header("Authorization", key));
     }
 
     @Override
@@ -75,7 +85,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicScore(guildID, userID, points, "add");
         } catch (IOException ex) {
-            logger.error("Failed to add score to user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
+            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to add score to user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
             throw new TatsumakiException("Could not add score to user " + userID + " on guild " + guildID);
         }
     }
@@ -85,7 +95,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicScore(guildID, userID, points, "set");
         } catch (IOException ex) {
-            logger.error("Failed to set the score of user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
+            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to set the score of user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
             throw new TatsumakiException("Could not add score to user " + userID + " on guild " + guildID);
         }
     }
@@ -95,7 +105,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicScore(guildID, userID, points, "remove");
         } catch (IOException ex) {
-            logger.error("Failed to remove points from user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
+            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to remove points from user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "", LogLevel.UNKNOWN);
             throw new TatsumakiException("Could not add score to user " + userID + " on guild " + guildID);
         }
     }
@@ -107,19 +117,31 @@ public class GuildHandler implements IGuildHandler {
             throw new TatsumakiException("Points must be above 0!");
         if (points > 50000)
             throw new TatsumakiException("Points must be below 50,000!!");
-        return Requests.makePostRequest(client, JSON, "{\"amount\"" + points + ",\"action\":\"" + action + "\"}", Endpoints.guildMembersScoreEndpoint(guildID, userID), new Header("Authorization", key));
+        String jsonString = "{\"amount\":" + points + ",\"action\":\"" + action + "\"}";
+        logger.debug("SCORE: " + jsonString);
+        return Requests.makePutRequest(client, JSON, jsonString, Endpoints.guildMembersScoreEndpoint(guildID, userID), new Header("Authorization", key));
     }
 
     @Override
     public ILeaderboard getLeaderboard(String guildID) {
+        return getLeaderboard(guildID, 10);
+    }
+
+    @Override
+    public ILeaderboard getLeaderboard(String guildID, long limit) {
         if (client == null)
             client = new OkHttpClient();
+        ILeaderboard leaderboard = null;
+        final List<IRankedUser> users = null;
         try {
-            logger.debug(Requests.unirest(Endpoints.guildLeaderboardEndpoint(guildID), new Header("Authorization", key)));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+            List<RankedUser> uRanked = Arrays.asList(gson.fromJson(Requests.makeGetRequest(client, Endpoints.guildLeaderboardEndpoint(guildID) + "?limit=" + limit, new Header("Authorization", key)).replaceAll("(,null)", ""), RankedUser[].class));
+            uRanked.forEach(u -> users.add(u));
 
-        return null;
+        } catch (Exception ex) {
+            logger.error("Could not load leaderboard! Error: " + ex.getMessage(), LogLevel.HIGH);
+            return null;
+        }
+        leaderboard = new Leaderboard(users, guildID);
+        return leaderboard;
     }
 }

@@ -7,7 +7,7 @@ public class Header {
     private String key;
     private String value;
 
-    protected Header(String key, String value) {
+    public Header(String key, String value) {
         this.key = key;
         this.value = value;
     }

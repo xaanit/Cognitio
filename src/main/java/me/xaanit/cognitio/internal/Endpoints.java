@@ -5,8 +5,8 @@ public class Endpoints {
     // The base URL for all API calls
     private static String BASE_URL = "https://api.tatsumaki.xyz/";
 
-    private static String GUILDS = BASE_URL + "guilds/";
-
+    private static String GUILDS = BASE_URL + "guilds/"
+            ;
     private static String GUILD_MEMBERS = "members/";
 
     private static String POINTS = "points";
@@ -14,7 +14,7 @@ public class Endpoints {
     private static String USERS = BASE_URL + "users/";
 
     public static String guildMembersPointsEndpoint(String guildID, String userID) {
-        return GUILDS + guildID + "/" + GUILD_MEMBERS + userID + "/points";
+        return GUILDS + guildID + "/" + GUILD_MEMBERS + userID + "/points/";
     }
 
     public static String guildMembersScoreEndpoint(String guildID, String userID) {

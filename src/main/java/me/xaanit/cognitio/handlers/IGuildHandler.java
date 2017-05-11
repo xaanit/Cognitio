@@ -6,6 +6,7 @@ public interface IGuildHandler {
 
     /**
      * Adds points to the specified user in the specified guild
+     * NOTE: THIS WILL JUST RETURN A 404 CURRENTLY. TRYING TO FIX.
      *
      * @param guildID The ID of the guild
      * @param userID  The ID of the user
@@ -17,6 +18,7 @@ public interface IGuildHandler {
 
     /**
      * Sets the points of the specified user in the specified guild
+     * NOTE: THIS WILL JUST RETURN A 404 CURRENTLY. TRYING TO FIX.
      *
      * @param guildID The ID of the guild
      * @param userID  The ID of the user
@@ -28,6 +30,7 @@ public interface IGuildHandler {
 
     /**
      * Removes points from the specified user in the specified guild
+     * NOTE: THIS WILL JUST RETURN A 404 CURRENTLY. TRYING TO FIX.
      *
      * @param guildID The ID of the guild
      * @param userID  The ID of the user
@@ -40,6 +43,7 @@ public interface IGuildHandler {
 
     /**
      * Adds Score to the specified user in the specified guild
+     * NOTE: THIS WILL JUST RETURN A 404 CURRENTLY. TRYING TO FIX.
      *
      * @param guildID The ID of the guild
      * @param userID  The ID of the user
@@ -51,6 +55,7 @@ public interface IGuildHandler {
 
     /**
      * Sets the Score of the specified user in the specified guild
+     * NOTE: THIS WILL JUST RETURN A 404 CURRENTLY. TRYING TO FIX.
      *
      * @param guildID The ID of the guild
      * @param userID  The ID of the user
@@ -62,6 +67,7 @@ public interface IGuildHandler {
 
     /**
      * Removes Score from the specified user in the specified guild
+     * NOTE: THIS WILL JUST RETURN A 404 CURRENTLY. TRYING TO FIX.
      *
      * @param guildID The ID of the guild
      * @param userID  The ID of the user
@@ -72,10 +78,19 @@ public interface IGuildHandler {
     boolean removeScoreFromUser(String guildID, String userID, int points);
 
     /**
-     * Gets the leaderboard for the guild
+     * Gets the leaderboard for the guild. Defaults to 10 users
      *
      * @param guildID The ID of the  guild
      * @return The instance of the ILeaderboard
      */
     ILeaderboard getLeaderboard(String guildID);
+
+    /**
+     * Gets the leaderboard for the guild. -1 for all
+     *
+     * @param guildID Tge ID of the guild
+     * @param limit   The max amount of users
+     * @return The instance of ILeaderboard
+     */
+    ILeaderboard getLeaderboard(String guildID, long limit);
 }
