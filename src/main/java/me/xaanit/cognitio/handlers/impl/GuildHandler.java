@@ -71,10 +71,13 @@ public class GuildHandler implements IGuildHandler {
         if (client == null)
             client = new OkHttpClient();
 
-        if (points < 0)
-            throw new TatsumakiException("Points must be above 0!");
-        if (points > 50000)
-            throw new TatsumakiException("Points must be below 50,000!!");
+        if (points < 0) {
+            points = 0;
+            logger.debug("Points are negative... Setting to 0...");
+        } else if (points > 50000) {
+            points = 50000;
+            logger.debug("Points are above 50,000 max... Setting to 50,000...");
+        }
 
         String jsonString = "{\"amount\":" + points + ",\"action\":\"" + action + "\"}";
 
@@ -114,10 +117,13 @@ public class GuildHandler implements IGuildHandler {
     private boolean basicScore(String guildID, String userID, int points, String action) throws IOException {
         if (client == null)
             client = new OkHttpClient();
-        if (points < 0)
-            throw new TatsumakiException("Points must be above 0!");
-        if (points > 50000)
-            throw new TatsumakiException("Points must be below 50,000!!");
+        if (points < 0) {
+            points = 0;
+            logger.debug("Score is negative... Setting to 0...");
+        } else if (points > 50000) {
+            points = 50000;
+            logger.debug("Score is above 50,000 max... Setting to 50,000...");
+        }
         String jsonString = "{\"amount\":" + points + ",\"action\":\"" + action + "\"}";
         return Requests.makePutRequest(client, JSON, jsonString, Endpoints.guildMembersScoreEndpoint(guildID, userID), new Header("Authorization", key));
     }
@@ -132,7 +138,7 @@ public class GuildHandler implements IGuildHandler {
         if (client == null)
             client = new OkHttpClient();
         ILeaderboard leaderboard = null;
-         List<IRankedUser> users = new ArrayList<>();
+        List<IRankedUser> users = new ArrayList<>();
         try {
             List<RankedUser> uRanked = Arrays.asList(gson.fromJson(Requests.makeGetRequest(client, Endpoints.guildLeaderboardEndpoint(guildID) + "?limit=" + limit, new Header("Authorization", key)).replaceAll("(,null)", ""), RankedUser[].class));
             uRanked.forEach(u -> users.add(u));

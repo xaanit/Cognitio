@@ -3,10 +3,10 @@ package me.xaanit.cognitio.internal;
 public class Endpoints {
 
     // The base URL for all API calls
-    private static String BASE_URL = "https://api.tatsumaki.xyz/";
+    public static String BASE_URL = "https://api.tatsumaki.xyz/";
 
-    private static String GUILDS = BASE_URL + "guilds/"
-            ;
+    private static String GUILDS = BASE_URL + "guilds/";
+
     private static String GUILD_MEMBERS = "members/";
 
     private static String POINTS = "points";
