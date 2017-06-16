@@ -46,6 +46,6 @@ Maven (Add the following to your pom.xml, no elipses):
 	<dependency>
 	    <groupId>com.github.xaanit</groupId>
 	    <artifactId>cognitio</artifactId>
-	    <version>03e571ed84</version>
+	    <version>@VERSION@</version>
 	</dependency>
 ```
