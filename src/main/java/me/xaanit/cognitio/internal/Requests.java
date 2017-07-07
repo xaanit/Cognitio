@@ -49,7 +49,7 @@ public class Requests {
                 throw new TatsumakiException("You are missing permissions!");
             } else if (body.contains("404")) {
                 throw new TatsumakiException("Endpoint not found!");
-            } else {
+            } else if (body.contains("400")) {
                 throw new TatsumakiException("Internal tatsumaki Error");
             }
         } catch (IOException ex) {
