@@ -20,7 +20,7 @@ public class Requests {
         requestBuilder.put(body);
         Request request = requestBuilder.build();
         Response response = client.newCall(request).execute();
-        errorCheck(response);
+        errorCheck(response.body().string());
         boolean success = response.isSuccessful();
         response.close();
         return success;
@@ -33,27 +33,23 @@ public class Requests {
 
         Request request = requestBuilder.build();
         Response response = client.newCall(request).execute();
-        errorCheck(response);
         String res = response.body().string();
+        errorCheck(res);
         response.close();
         return res;
     }
 
 
-    private static void errorCheck(Response response) {
-        try {
-            String body = response.body().string();
-            if (body.contains("401")) {
-                throw new TatsumakiException("You are unauthorised!");
-            } else if (body.contains("403")) {
-                throw new TatsumakiException("You are missing permissions!");
-            } else if (body.contains("404")) {
-                throw new TatsumakiException("Endpoint not found!");
-            } else if (body.contains("400")) {
-                throw new TatsumakiException("Internal tatsumaki Error");
-            }
-        } catch (IOException ex) {
-            throw new TatsumakiException(ex.getMessage());
+    private static void errorCheck(String body) {
+        if (!body.startsWith("{\"message\":")) return;
+        if (body.contains("401")) {
+            throw new TatsumakiException("You are unauthorised!");
+        } else if (body.contains("403")) {
+            throw new TatsumakiException("You are missing permissions!");
+        } else if (body.contains("404")) {
+            throw new TatsumakiException("Endpoint not found!");
+        } else if (body.contains("400")) {
+            throw new TatsumakiException("Internal tatsumaki Error");
         }
     }
 

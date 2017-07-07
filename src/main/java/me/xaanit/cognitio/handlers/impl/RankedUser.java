@@ -37,4 +37,13 @@ public class RankedUser implements IRankedUser {
     public String getScore() {
         return this.score;
     }
+
+    @Override
+    public String toString() {
+        return "RankedUser{" +
+                "user_id='" + user_id + '\'' +
+                ", rank=" + rank +
+                ", score='" + score + '\'' +
+                '}';
+    }
 }

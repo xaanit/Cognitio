@@ -27,4 +27,12 @@ public class Leaderboard implements ILeaderboard {
     public String getGuildID() {
         return this.guildID;
     }
+
+    @Override
+    public String toString() {
+        return "Leaderboard{" +
+                "users=" + users +
+                ", guildID='" + guildID + '\'' +
+                '}';
+    }
 }
