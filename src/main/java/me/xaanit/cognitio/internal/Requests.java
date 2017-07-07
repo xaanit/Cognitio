@@ -1,6 +1,7 @@
 package me.xaanit.cognitio.internal;
 
 import me.xaanit.cognitio.handlers.impl.Header;
+import me.xaanit.cognitio.internal.exceptions.TatsumakiException;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -9,7 +10,6 @@ import java.io.IOException;
  * Created by Jacob on 5/9/2017.
  */
 public class Requests {
-
     public static boolean makePutRequest(OkHttpClient client, MediaType type, String bodyString, String url, Header... headers) throws IOException {
 
         RequestBody body = RequestBody.create(type, bodyString);
@@ -20,6 +20,7 @@ public class Requests {
         requestBuilder.put(body);
         Request request = requestBuilder.build();
         Response response = client.newCall(request).execute();
+        errorCheck(response);
         boolean success = response.isSuccessful();
         response.close();
         return success;
@@ -32,9 +33,28 @@ public class Requests {
 
         Request request = requestBuilder.build();
         Response response = client.newCall(request).execute();
+        errorCheck(response);
         String res = response.body().string();
         response.close();
         return res;
+    }
+
+
+    private static void errorCheck(Response response) {
+        try {
+            String body = response.body().string();
+            if (body.contains("401")) {
+                throw new TatsumakiException("You are unauthorised!");
+            } else if (body.contains("403")) {
+                throw new TatsumakiException("You are missing permissions!");
+            } else if (body.contains("404")) {
+                throw new TatsumakiException("Endpoint not found!");
+            } else {
+                throw new TatsumakiException("Internal tatsumaki Error");
+            }
+        } catch (IOException ex) {
+            throw new TatsumakiException(ex.getMessage());
+        }
     }
 
 

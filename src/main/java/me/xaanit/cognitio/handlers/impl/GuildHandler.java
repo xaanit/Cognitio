@@ -2,14 +2,14 @@ package me.xaanit.cognitio.handlers.impl;
 
 
 import com.google.gson.Gson;
+import me.xaanit.cognitio.Cognitio;
 import me.xaanit.cognitio.handlers.IGuildHandler;
 import me.xaanit.cognitio.handlers.ILeaderboard;
 import me.xaanit.cognitio.handlers.IRankedUser;
 import me.xaanit.cognitio.internal.Endpoints;
 import me.xaanit.cognitio.internal.Requests;
 import me.xaanit.cognitio.internal.exceptions.TatsumakiException;
-import me.xaanit.cognitio.util.LogLevel;
-import me.xaanit.cognitio.util.SimpleLogger;
+import me.xaanit.simplelogger.SimpleLogger;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 
@@ -33,7 +33,7 @@ public class GuildHandler implements IGuildHandler {
             this.key = "";
         else
             this.key = key;
-        this.logger = new SimpleLogger();
+        this.logger = new SimpleLogger(Cognitio.class);
         gson = new Gson();
     }
 
@@ -42,7 +42,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicPoints(guildID, userID, points, "add");
         } catch (IOException ex) {
-            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to add points to user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
+            logger.medium("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to add points to user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]");
             throw new TatsumakiException("Could not add points to user " + userID + " on guild " + guildID);
         }
     }
@@ -52,7 +52,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicPoints(guildID, userID, points, "set");
         } catch (IOException ex) {
-            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to set the points of user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
+            logger.medium("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to set the points of user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]");
             throw new TatsumakiException("Could not set the points of user " + userID + " on guild " + guildID);
         }
     }
@@ -62,7 +62,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicPoints(guildID, userID, points, "remove");
         } catch (IOException ex) {
-            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to remove points from user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]", LogLevel.UNKNOWN);
+            logger.medium("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to remove points from user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "[[IF THIS IS A BUG. CONTACT THE DEV.]]");
             throw new TatsumakiException("Could not add points to user " + userID + " on guild " + guildID);
         }
     }
@@ -89,7 +89,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicScore(guildID, userID, points, "add");
         } catch (IOException ex) {
-            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to add score to user " + userID + " on guild " + guildID + " with message: " + ex.getMessage(), LogLevel.UNKNOWN);
+            logger.medium("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to add score to user " + userID + " on guild " + guildID + " with message: " + ex.getMessage());
             throw new TatsumakiException("Could not add score to user " + userID + " on guild " + guildID);
         }
     }
@@ -99,7 +99,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicScore(guildID, userID, points, "set");
         } catch (IOException ex) {
-            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to set the score of user " + userID + " on guild " + guildID + " with message: " + ex.getMessage(), LogLevel.UNKNOWN);
+            logger.medium("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to set the score of user " + userID + " on guild " + guildID + " with message: " + ex.getMessage());
             throw new TatsumakiException("Could not add score to user " + userID + " on guild " + guildID);
         }
     }
@@ -109,7 +109,7 @@ public class GuildHandler implements IGuildHandler {
         try {
             return basicScore(guildID, userID, points, "remove");
         } catch (IOException ex) {
-            logger.error("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to remove points from user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "", LogLevel.UNKNOWN);
+            logger.medium("[[IF THIS IS A BUG. CONTACT THE DEV.]]Failed to remove points from user " + userID + " on guild " + guildID + " with message: " + ex.getMessage() + "");
             throw new TatsumakiException("Could not add score to user " + userID + " on guild " + guildID);
         }
     }
@@ -143,7 +143,7 @@ public class GuildHandler implements IGuildHandler {
             List<RankedUser> uRanked = Arrays.asList(gson.fromJson(Requests.makeGetRequest(client, Endpoints.guildLeaderboardEndpoint(guildID) + "?limit=" + limit, new Header("Authorization", key)).replaceAll("(,null)", ""), RankedUser[].class));
             uRanked.forEach(u -> users.add(u));
         } catch (Exception ex) {
-            logger.error("Could not load leaderboard! Error: " + ex.getMessage(), LogLevel.HIGH);
+            logger.high("Could not load leaderboard! Error: " + ex.getMessage());
             return null;
         }
         leaderboard = new Leaderboard(users, guildID);
