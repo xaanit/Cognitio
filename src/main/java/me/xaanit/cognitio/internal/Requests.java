@@ -1,3 +1,4 @@
+
 package me.xaanit.cognitio.internal;
 
 import me.xaanit.cognitio.handlers.impl.Header;
@@ -54,6 +55,7 @@ public class Requests {
     	} catch(IOException ex){
     		throw new TatsumakiException(ex.getMessage());
     	}
+	return null;
     }
 
 
