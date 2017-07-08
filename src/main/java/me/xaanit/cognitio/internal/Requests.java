@@ -40,7 +40,7 @@ public class Requests {
     private static String errorCheck(Response response) {
     	try{
 	    	String body = response.body().string();
-		if (!body.startsWith("{\"message\":")) return;
+		if (!body.startsWith("{\"message\":")) return body;
 	        if (body.contains("401")) {
 	            throw new TatsumakiException("You are unauthorised!");
 	        } else if (body.contains("403")) {
@@ -53,8 +53,6 @@ public class Requests {
 	        return body;
     	} catch(IOException ex){
     		throw new TatsumakiException(ex.getMessage());
-    	}
+	}
     }
-
-
 }
