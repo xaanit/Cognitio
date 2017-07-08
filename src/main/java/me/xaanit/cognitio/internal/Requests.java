@@ -8,6 +8,7 @@ import java.io.IOException;
 
 /**
  * Created by Jacob on 5/9/2017.
+ * Edited by spthiel on 7/7/2017
  */
 public class Requests {
     public static boolean makePutRequest(OkHttpClient client, MediaType type, String bodyString, String url, Header... headers) throws IOException {
@@ -20,12 +21,11 @@ public class Requests {
         requestBuilder.put(body);
         Request request = requestBuilder.build();
         Response response = client.newCall(request).execute();
-        errorCheck(response.body().string());
         boolean success = response.isSuccessful();
-        response.close();
+        errorCheck(response);
         return success;
     }
-
+    
     public static String makeGetRequest(OkHttpClient client, String url, Header... headers) throws IOException {
         Request.Builder requestBuilder = new Request.Builder().url(url);
         for (Header h : headers)
@@ -33,24 +33,27 @@ public class Requests {
 
         Request request = requestBuilder.build();
         Response response = client.newCall(request).execute();
-        String res = response.body().string();
-        errorCheck(res);
-        response.close();
+        String res = errorCheck(response);
         return res;
     }
-
-
-    private static void errorCheck(String body) {
-        if (!body.startsWith("{\"message\":")) return;
-        if (body.contains("401")) {
-            throw new TatsumakiException("You are unauthorised!");
-        } else if (body.contains("403")) {
-            throw new TatsumakiException("You are missing permissions!");
-        } else if (body.contains("404")) {
-            throw new TatsumakiException("Endpoint not found!");
-        } else if (body.contains("400")) {
-            throw new TatsumakiException("Internal tatsumaki Error");
-        }
+    
+    private static String errorCheck(Response response) {
+    	try{
+	    	String body = response.body().string();
+		if (!body.startsWith("{\"message\":")) return;
+	        if (body.contains("401")) {
+	            throw new TatsumakiException("You are unauthorised!");
+	        } else if (body.contains("403")) {
+	            throw new TatsumakiException("You are missing permissions!");
+	        } else if (body.contains("404")) {
+	            throw new TatsumakiException("Endpoint not found!");
+	        } else if (body.contains("400")) {
+	            throw new TatsumakiException("Internal tatsumaki Error");
+	        }
+	        return body;
+    	} catch(IOException ex){
+    		throw new TatsumakiException(ex.getMessage());
+    	}
     }
 
 
