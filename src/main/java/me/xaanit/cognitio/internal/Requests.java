@@ -1,4 +1,3 @@
-
 package me.xaanit.cognitio.internal;
 
 import me.xaanit.cognitio.handlers.impl.Header;
@@ -56,6 +55,4 @@ public class Requests {
     		throw new TatsumakiException(ex.getMessage());
 	}
     }
-
-
 }
